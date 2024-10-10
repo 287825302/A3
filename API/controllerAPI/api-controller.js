@@ -111,7 +111,7 @@ router.get('/fundraiser/:id', (req, res) => {
       LEFT JOIN DONATION d ON f.FUNDRAISER_ID = d.FUNDRAISER_ID
       WHERE f.FUNDRAISER_ID = ?
     `;
-    connection.query(query, [fundraiserId ], (err, records) => {
+    connection.query(query, [fundraiserId], (err, records) => {
         if (err) {
             // Log an error if the query fails
             console.error("Error while retrieving the data");
@@ -120,6 +120,23 @@ router.get('/fundraiser/:id', (req, res) => {
         res.json(records);
     });
 });
+
+// Insert a new donation
+router.post('/donation', (req, res) => {
+    const { DATE, AMOUNT, GIVER, FUNDRAISER_ID } = req.body;
+    const query = `
+      INSERT INTO DONATION (DATE, AMOUNT, GIVER, FUNDRAISER_ID)
+      VALUES (?, ?, ?, ?)
+    `;
+    connection.query(query, [DATE, AMOUNT, GIVER, FUNDRAISER_ID], (err, result) => {
+        if (err) {
+            console.error("Error while inserting the donation: " + err);
+        } else {
+            res.send({ insert: "success" });
+        }
+    });
+});
+
 
 // Commented out route - possibly for future use or reference
 // router.get("/:id", (req, res) => {
