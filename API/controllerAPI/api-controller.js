@@ -137,6 +137,22 @@ router.post('/donation', (req, res) => {
     });
 });
 
+router.post('/fundraiser', (req, res) => {
+    const { ORGANIZER, CAPTION, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID } = req.body;
+    const query = `
+      INSERT INTO FUNDRAISER (ORGANIZER, CAPTION, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    connection.query(query, [ORGANIZER, CAPTION, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID], (err, result) => {
+        if (err) {
+            console.error("Error while inserting the donation: " + err);
+        } else {
+            res.send({ insert: "success" });
+        }
+    });
+});
+
+
 
 // Commented out route - possibly for future use or reference
 // router.get("/:id", (req, res) => {
