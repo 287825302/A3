@@ -79,23 +79,42 @@ router.get('/search', (req, res) => {
 });
 
 // Define a route to get a specific fundraiser by ID
-router.get('/FUNDRAISER/:id', (req, res) => {
-    // Extract the fundraiser ID from the URL parameters
-    const fundraiserId = req.params.id;
+// router.get('/FUNDRAISER/:id', (req, res) => {
+//     // Extract the fundraiser ID from the URL parameters
+//     const fundraiserId = req.params.id;
 
-    // SQL query to select a specific fundraiser and its category
+//     // SQL query to select a specific fundraiser and its category
+//     const query = `
+//       SELECT f.*, c.NAME as category_name 
+//       FROM FUNDRAISER f
+//       JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+//       WHERE f.FUNDRAISER_ID = ?
+//     `;
+
+//     // Execute the query with the fundraiser ID
+//     connection.query(query, [fundraiserId], (err, records) => {
+//         if (err) {
+//             // Log an error if the query fails
+//             console.error("Error while retrieving the data:");
+//         }
+//         // Send the query results back to the client as JSON
+//         res.json(records);
+//     });
+// });
+
+router.get('/fundraiser/:id', (req, res) => {
+    const fundraiserId = req.params.id;
     const query = `
-      SELECT f.*, c.NAME as category_name 
+      SELECT f.*, c.NAME as category_name, d.DONATION_ID, d.AMOUNT, d.GIVER
       FROM FUNDRAISER f
       JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
+      LEFT JOIN DONATION d ON f.FUNDRAISER_ID = d.FUNDRAISER_ID
       WHERE f.FUNDRAISER_ID = ?
     `;
-
-    // Execute the query with the fundraiser ID
-    connection.query(query, [fundraiserId], (err, records) => {
+    connection.query(query, [fundraiserId ], (err, records) => {
         if (err) {
             // Log an error if the query fails
-            console.error("Error while retrieving the data:");
+            console.error("Error while retrieving the data");
         }
         // Send the query results back to the client as JSON
         res.json(records);
