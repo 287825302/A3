@@ -83,7 +83,7 @@ router.get('/search', (req, res) => {
 router.get('/fundraiser/:id', (req, res) => {
     const fundraiserId = req.params.id;
     const query = `
-      SELECT f.*, c.NAME as category_name, d.DONATION_ID, d.AMOUNT, d.GIVER
+      SELECT f.*, c.NAME as category_name, d.DONATION_ID, d.AMOUNT, d.GIVER, d.DATE
       FROM FUNDRAISER f
       JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
       LEFT JOIN DONATION d ON f.FUNDRAISER_ID = d.FUNDRAISER_ID

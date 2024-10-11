@@ -24,6 +24,9 @@ app.get("/fundraisers",(req,res)=>{
   res.sendFile(path.join(__dirname,"fundraisers.html"));
 });
 
+app.get("/donation",(req,res)=>{
+  res.sendFile(path.join(__dirname,"donation.html"));
+});
 //we will add more routes here
 
 app.listen(8080,()=>{
