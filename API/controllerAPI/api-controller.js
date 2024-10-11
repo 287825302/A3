@@ -78,29 +78,7 @@ router.get('/search', (req, res) => {
     });
 });
 
-// Define a route to get a specific fundraiser by ID
-// router.get('/FUNDRAISER/:id', (req, res) => {
-//     // Extract the fundraiser ID from the URL parameters
-//     const fundraiserId = req.params.id;
 
-//     // SQL query to select a specific fundraiser and its category
-//     const query = `
-//       SELECT f.*, c.NAME as category_name 
-//       FROM FUNDRAISER f
-//       JOIN CATEGORY c ON f.CATEGORY_ID = c.CATEGORY_ID
-//       WHERE f.FUNDRAISER_ID = ?
-//     `;
-
-//     // Execute the query with the fundraiser ID
-//     connection.query(query, [fundraiserId], (err, records) => {
-//         if (err) {
-//             // Log an error if the query fails
-//             console.error("Error while retrieving the data:");
-//         }
-//         // Send the query results back to the client as JSON
-//         res.json(records);
-//     });
-// });
 
 router.get('/fundraiser/:id', (req, res) => {
     const fundraiserId = req.params.id;
@@ -152,18 +130,34 @@ router.post('/fundraiser', (req, res) => {
     });
 });
 
+router.put('/updateFundraiser/:id', (req, res) => {
+    const fundraiserId = req.params.id;
+    const { ORGANIZER, CAPTION, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID } = req.body;
+    const query = `
+      UPDATE FUNDRAISER
+      SET ORGANIZER = ?, CAPTION = ?, TARGET_FUNDING = ?, CURRENT_FUNDING = ?, CITY = ?, ACTIVE = ?, CATEGORY_ID = ?
+      WHERE FUNDRAISER_ID = ?
+    `;
+    connection.query(query, [ORGANIZER, CAPTION, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID, fundraiserId], (err, result) => {
+        if (err){
+            console.error("Error while Updating the data" + err);
+        }else{
+            res.send({update:"success"});
+        }
+   })
+})
+
+router.delete("/delete/:id", (req, res)=>{
+	connection.query("delete from FUNDRAISER where FUNDRAISER_ID=" + req.params.id, (err, records,fields)=> {
+		 if (err){
+			 console.error("Error while deleting the data");
+		 }else{
+			 res.send({delete:"Delete Sucess"});
+		 }
+	})
+})
 
 
-// Commented out route - possibly for future use or reference
-// router.get("/:id", (req, res) => {
-//     connection.query("select * from FUNDRAISER where FUNDRAISER_ID=" + req.params.id, (err, records, fields) => {
-//         if (err) {
-//             console.error("Error while retrieve the data");
-//         } else {
-//             res.send(records);
-//         }
-//     })
-// })
 
 // Export the router so it can be used in other parts of the application
 module.exports = router;
